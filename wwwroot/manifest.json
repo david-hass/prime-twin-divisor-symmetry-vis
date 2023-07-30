@@ -1,10 +1,8 @@
 {
-  "name": "MyBlazorPwa",
-  "short_name": "MyBlazorPwa",
+  "name": "prime-twin-divisor-symmetry-vis",
+  "short_name": "prime-twin-divisor-symmetry-vis",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#03173d",
   "prefer_related_applications": false,
   "icons": [
     {
