@@ -1,0 +1,84 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+@inject PrimeService primeService
+<div style="position:absolute;top:1%;left:1%;right:1%;">
+    <p style="font-size:x-large;margin:0;float:left;color:#6fdbff;">@sandwichedNumber?.GetValue()</p>
+    <input 
+        type="number" 
+        min="0"
+        @bind="@rangeTo"
+        style="font-size:x-large;float:right;width:15%;text-align:right;outline:none;padding:5px;border:none;border-bottom:1px solid #6fdbff;color: white; background: #121212;"
+    >
+    <input 
+        type="number" 
+        min="1"
+        @bind="@rangeFrom"
+        style="margin-right:10px;font-size:x-large;float:right;width:15%;text-align:right;outline:none;padding:5px;border:none;border-bottom:1px solid #6fdbff;color: white; background: #121212;"
+    >
+</div>
+<div style="position:absolute;top:15%;right:5%;left:5%;height:50%;overflow:auto;">
+@if (sandwichedNumber != null && symmetricDivisors != null)
+{
+    <SymmetryGrid symmetricDivisors="@symmetricDivisors" />
+}
+</div>
+<div id="numlist" style="position:absolute;bottom:1%;right:0%;left:0%;height:25%;overflow-x:scroll;overflow-y:hidden;">
+<div style="position:relative;height:100%;">
+<div style="position:absolute;bottom:0%;right:0%;left:0%;">
+<NumberList 
+    nums="@primeService.GetNumbers(@rangeFrom,@rangeTo)"
+    OnSelectSandwichedNumber="@SelectSandwichedNumber"
+ />
+</div>
+</div>
+</div>
+
+<style>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>
+
+
+@code {
+
+    private int _rangeFrom = 0;
+    private int rangeFrom
+    {
+        get => _rangeFrom;
+        set
+        {
+            _rangeFrom = Math.Max(value, 0);
+        }
+    }
+    private int _rangeTo = 7676;
+    private int rangeTo
+    {
+        get => _rangeTo;
+        set
+        {
+            _rangeTo = Math.Max(value, 1);
+        }
+    }
+
+    SandwichedByPrimesNumber? sandwichedNumber = null;
+    NumberWithDivisors[]? symmetricDivisors;
+    private void SelectSandwichedNumber(Number num){
+        sandwichedNumber = num as SandwichedByPrimesNumber;
+        symmetricDivisors = primeService.FindSymmetricDivisorsForPrimeSandwichedNumber(sandwichedNumber!);
+    }
+
+    protected override void OnAfterRender(bool firstRender){
+        if (firstRender){
+            JSRuntime.InvokeVoidAsync("initScrollListener");
+        }
+    }
+
+}

@@ -1,0 +1,92 @@
+@inject PrimeService primeService
+
+@if (nRows > 0 && nCols > 0)
+{
+<div class="grid-container">
+    @for (int i = 0; i < @nRows; i++)
+    {
+        @for (int j = 0; j < @nCols; j++)
+        {
+            @if (((symmetricDivisors[j].GetDivisors().Count-1) == i) ||
+            j==(nCols/2))
+            {
+            <span class="grid-item highlighted1">
+                @if((val = @symmetricDivisors[j].GetDivisors().ElementAtOrDefault(i)?.GetValue() ?? 0) != 0)
+                {
+                    @val
+                }
+            </span>
+            }
+            else{
+                @if((val = @symmetricDivisors[j].GetDivisors().ElementAtOrDefault(i)?.GetValue() ?? 0) != 0)
+                {
+                <span class="grid-item highlighted2">
+                    @val
+                </span>
+                }
+                else{
+                <span class="grid-item" />
+                }
+            }
+        }
+    }
+    @for (int j = 0; j < @nCols; j++)
+    {
+        <span />
+    }
+    @for (int j = 0; j < @nCols; j++)
+    {
+        <span class="grid-item" style="border-top:none;">
+                @symmetricDivisors[j].GetNumber().GetValue()
+        </span>
+    }
+</div>
+}
+else
+{
+    <p>Provided symmetric divisors object is invalid.</p>
+}
+
+<style>
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(@nCols, 1fr);
+        grid-template-rows: repeat(@nRows, 1fr);
+        gap: 5px;
+        color: white;
+    }
+
+    .single-row {
+        display: grid;
+        grid-template-columns: repeat(@nCols, 1fr);
+        gap: 5px;
+        color: white;
+
+    }
+
+    .grid-item {
+        border: 1px solid white;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .highlighted1{
+        background-color: #6fdbff;
+        color: black;
+    }
+
+    .highlighted2{
+        background-color: #4CAF50;
+    }
+
+</style>
+
+@code {
+    [Parameter]
+    public NumberWithDivisors[] symmetricDivisors { get; set; }
+
+    private int nRows => symmetricDivisors.Length/2;
+    private int nCols => symmetricDivisors.Length;
+
+    public int val { get; set; }
+}

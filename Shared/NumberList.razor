@@ -1,0 +1,40 @@
+@if(nums==null){
+    <span style="color:white;bottom:0;position:absolute">
+        No numbers provided
+    </span>
+} else {
+<div style="position:absolute;cursor:pointer;color:white;bottom:0px;left:0px;right:0px;">
+    @foreach (Number num in nums)
+    {
+        if (num.GetNumberType()==NumberType.TwinPrime)
+        {
+        <span style="margin-left: 0.5vh;margin-right: 0.5vh;background-color:#6fdbff;color:black;border-radius: 5px;padding:1px;">
+            @num.GetValue()
+        </span>
+        }else if(num.GetNumberType()==NumberType.SandwichedByPrimes){
+        <span
+         @onclick="()=>SelectSandwichedNumber(num)" 
+         style="font-size: x-large;margin-left: 0.5vh;margin-right: 0.5vh;background-color:#b2d2ff;color:black;border-radius: 5px;padding:1px;">
+            @num.GetValue()
+        </span>
+        }else{
+        <span style="margin-left: 0.5vh;margin-right: 0.5vh;">
+            @num.GetValue()
+        </span>
+        }
+    }
+</div>
+}
+
+@code {
+    [Parameter]
+    public Number[]? nums { get; set; }
+
+    [Parameter]
+    public EventCallback<Number> OnSelectSandwichedNumber {get;set;}
+
+    async Task SelectSandwichedNumber(Number num)
+    {
+      await OnSelectSandwichedNumber.InvokeAsync(num);
+    }
+}
