@@ -7,21 +7,29 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>twin-prime-partner-vis</title>
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <base href="/" />
     <link href="app.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <script type="text/javascript">
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash
           );
         }
-      }(window.location))
-  </script>
+      })(window.location);
+    </script>
   </head>
 
   <body>
@@ -34,6 +42,9 @@
     </div>
 
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+      navigator.serviceWorker.register("service-worker.js");
+    </script>
     <script src="scripts.js"></script>
   </body>
 </html>
