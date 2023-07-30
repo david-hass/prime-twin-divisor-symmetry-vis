@@ -1,22 +1,36 @@
-name: Deploy to GitHub Pages
+name: github pages
 on:
   push:
-    branches: [ master ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  deploy-to-github-pages:
-    # use ubuntu-latest image to run steps on
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v3.2.0
-      with:
-        dotnet-version: 7.0
-    - name: Publish .NET Core Project
-      run: dotnet publish twin-prime-partner-vis.csproj -c Release -o release --nologo
-    - name: Commit wwwroot to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4.4.3
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: release/wwwroot
+      # Checkout the code
+      - uses: actions/checkout@v2
+
+      # Install .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+          
+      # Install dotnet wasm buildtools workload
+      - name: Install .NET WASM Build Tools
+        run: dotnet workload install wasm-tools
+          
+      # Publishes Blazor project to the release-folder
+      - name: Publish .NET Core Project
+        run: dotnet publish twin-prime-partner-vis.csproj -c:Release -p:GHPages=true -o dist/Web --nologo
+
+      - name: Commit wwwroot to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist/Web/wwwroot
